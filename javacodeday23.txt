@@ -1,0 +1,76 @@
+ public class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized void decrement() {
+        count--;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+
+
+
+
+
+ public final class ImmutableData {
+    private final int value;
+
+    public ImmutableData(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+
+
+
+
+
+
+
+ import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Main {
+    public static void main(String[] args) {
+        // Thread-safe Counter demonstration
+        Counter counter = new Counter();
+
+        Runnable incrementTask = () -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        };
+
+        Runnable decrementTask = () -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.decrement();
+            }
+        };
+
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        executor.execute(incrementTask);
+        executor.execute(decrementTask);
+        executor.execute(incrementTask);
+        executor.execute(decrementTask);
+
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+            // Wait for all tasks to finish
+        }
+
+        System.out.println("Final counter value: " + counter.getCount());
+
+        // Immutable object demonstration
+        ImmutableData immutableData = new ImmutableData(42);
+        System.out.println("Immutable data value: " + immutableData.getValue());
+    }
+}
