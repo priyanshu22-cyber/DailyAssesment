@@ -1,0 +1,52 @@
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class ReflectionExample {
+    public static void main(String[] args) {
+        try {
+            // Get the Class object associated with Person
+            Class<?> personClass = Class.forName("Person");
+
+            // Inspect constructors
+            Constructor<?>[] constructors = personClass.getDeclaredConstructors();
+            System.out.println("Constructors:");
+            for (Constructor<?> constructor : constructors) {
+                System.out.println(" " + constructor);
+            }
+
+            // Inspect methods
+            Method[] methods = personClass.getDeclaredMethods();
+            System.out.println("Methods:");
+            for (Method method : methods) {
+                System.out.println(" " + method);
+            }
+
+            // Inspect fields
+            Field[] fields = personClass.getDeclaredFields();
+            System.out.println("Fields:");
+            for (Field field : fields) {
+                System.out.println(" " + field);
+            }
+
+            // Create an instance of Person using the parameterized constructor
+            Constructor<?> constructor = personClass.getConstructor(String.class, int.class);
+            Object personInstance = constructor.newInstance("John Doe", 30);
+
+            // Display person info before modification
+            Method displayInfoMethod = personClass.getMethod("displayInfo");
+            displayInfoMethod.invoke(personInstance);
+
+            // Modify the private field 'name' using reflection
+            Field nameField = personClass.getDeclaredField("name");
+            nameField.setAccessible(true);  // Make the private field accessible
+            nameField.set(personInstance, "Jane Doe");
+
+            // Display person info after modification
+            displayInfoMethod.invoke(personInstance);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
