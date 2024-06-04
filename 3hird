@@ -1,0 +1,80 @@
+import java.util.function.Predicate;
+import java.util.function.Function;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class PersonUtils {
+
+    public static void operateOnPerson(Person person, 
+                                       Predicate<Person> predicate, 
+                                       Function<Person, String> function, 
+                                       Consumer<Person> consumer, 
+                                       Supplier<Person> supplier) {
+        // Predicate: Test the person
+        boolean testResult = predicate.test(person);
+        System.out.println("Predicate test result: " + testResult);
+
+        // Function: Apply a function to the person and get a result
+        String functionResult = function.apply(person);
+        System.out.println("Function result: " + functionResult);
+
+        // Consumer: Perform an operation on the person
+        consumer.accept(person);
+        System.out.println("Consumer operation completed. Updated person: " + person);
+
+        // Supplier: Get a new person
+        Person newPerson = supplier.get();
+        System.out.println("Supplier provided a new person: " + newPerson);
+    }
+
+    public static void main(String[] args) {
+        Person person = new Person("Alice", 30);
+
+        Predicate<Person> isAdult = p -> p.getAge() >= 18;
+        Function<Person, String> getName = Person::getName;
+        Consumer<Person> celebrateBirthday = p -> p.setAge(p.getAge() + 1);
+        Supplier<Person> newPersonSupplier = () -> new Person("Bob", 25);
+
+        operateOnPerson(person, isAdult, getName, celebrateBirthday, newPersonSupplier);
+    }
+}
+
+
+
+
+
+
+
+
+
+public class Person {
+    private String name;
+    private int age;
+
+    // Constructors, getters, and setters
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+@Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + '}';
+    }
+}
