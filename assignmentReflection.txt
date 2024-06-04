@@ -1,0 +1,40 @@
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
+
+public class ReflectionExample {
+    private String privateField = "Initial Value";
+
+    public static void main(String[] args) {
+        ReflectionExample obj = new ReflectionExample();
+
+        // Inspect methods
+        System.out.println("Methods:");
+        Method[] methods = obj.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            System.out.println(method.getName());
+        }
+
+        // Inspect fields
+        System.out.println("\nFields:");
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true); // Make private fields accessible
+            try {
+                System.out.println(field.getName() + ": " + field.get(obj));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Modify private field value
+        try {
+            Field privateField = obj.getClass().getDeclaredField("privateField");
+            privateField.setAccessible(true); // Make private field accessible
+            privateField.set(obj, "Modified Value");
+            System.out.println("\nModified Field Value: " + obj.privateField);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+}
